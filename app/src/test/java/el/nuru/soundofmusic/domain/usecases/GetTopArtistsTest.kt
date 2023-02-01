@@ -3,7 +3,8 @@ package el.nuru.soundofmusic.domain.usecases
 import el.nuru.soundofmusic.data.Repository
 import el.nuru.soundofmusic.data.datasources.NetworkResult
 import el.nuru.soundofmusic.data.datasources.local.entities.ArtistData
-import el.nuru.soundofmusic.domain.entities.toArtistEntity
+import el.nuru.soundofmusic.domain.utils.Resource
+import el.nuru.soundofmusic.domain.utils.toArtistEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -27,7 +28,7 @@ internal class GetTopArtistsTest {
         val refresh = false
 
         val data = listOf(ArtistData())
-        val expectedResult = NetworkResult.Success(data.map { it.toArtistEntity() })
+        val expectedResult = Resource.Success(data.map { it.toArtistEntity() })
 
         `when`(repository.getTopArtists(refresh))
             .thenReturn(NetworkResult.Success(data))
@@ -41,9 +42,9 @@ internal class GetTopArtistsTest {
     fun `given error result when fetching top artists then return error result`() = runBlocking {
         val refresh = false
         val exception = Exception("Error")
-        val expectedResult = NetworkResult.Error(exception)
+        val expectedResult = Resource.Error(exception)
 
-        `when`(repository.getTopArtists(refresh)).thenReturn(expectedResult)
+        `when`(repository.getTopArtists(refresh)).thenReturn(NetworkResult.Error(exception))
 
         val result = getTopArtists(refresh)
 

@@ -3,7 +3,8 @@ package el.nuru.soundofmusic.domain.usecases
 import el.nuru.soundofmusic.data.Repository
 import el.nuru.soundofmusic.data.datasources.NetworkResult
 import el.nuru.soundofmusic.data.datasources.local.entities.ArtistData
-import el.nuru.soundofmusic.domain.entities.toArtistEntity
+import el.nuru.soundofmusic.domain.utils.Resource
+import el.nuru.soundofmusic.domain.utils.toArtistEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Before
@@ -25,7 +26,7 @@ internal class SearchTopArtistsTest {
         val query = ""
 
         val data = listOf(ArtistData())
-        val expectedResult = NetworkResult.Success(data.map { it.toArtistEntity() })
+        val expectedResult = Resource.Success(data.map { it.toArtistEntity() })
 
         Mockito.`when`(repository.searchTopArtists(query))
             .thenReturn(NetworkResult.Success(data))
@@ -39,9 +40,9 @@ internal class SearchTopArtistsTest {
     fun `given error result when querying for top artists then return error result`() = runBlocking {
         val query = ""
         val exception = Exception("Error")
-        val expectedResult = NetworkResult.Error(exception)
+        val expectedResult = Resource.Error(exception)
 
-        Mockito.`when`(repository.searchTopArtists(query)).thenReturn(expectedResult)
+        Mockito.`when`(repository.searchTopArtists(query)).thenReturn(NetworkResult.Error(exception))
 
         val result = searchTopArtists(query)
 

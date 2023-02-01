@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import el.nuru.soundofmusic.data.datasources.NetworkResult
 import el.nuru.soundofmusic.domain.usecases.GetArtistSongs
+import el.nuru.soundofmusic.domain.utils.Resource
 import el.nuru.soundofmusic.presentation.models.Song
 import el.nuru.soundofmusic.presentation.models.toSongModel
 import el.nuru.soundofmusic.presentation.songslist.SongsActivity.Companion.EXTRA_ARTIST_ID
@@ -38,12 +38,12 @@ class SongsViewModel @Inject constructor(
             val artistId = savedStateHandle.get<String>(EXTRA_ARTIST_ID) ?: return@launch
 
             when (val result = getArtistSongs(artistPermalink, artistId, refresh)) {
-                is NetworkResult.Error -> {
+                is Resource.Error -> {
                     mutableUiState.update {
                         it.copy(isRefreshing = false)
                     }
                 }
-                is NetworkResult.Success -> {
+                is Resource.Success -> {
                     val songs = result.data.map { it.toSongModel() }
                     mutableUiState.update {
                         it.copy(songs = songs, currentlyArtistName = artistName, isRefreshing = false)

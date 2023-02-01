@@ -4,11 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import el.nuru.soundofmusic.data.datasources.NetworkResult
 import el.nuru.soundofmusic.domain.usecases.GetTopArtists
 import el.nuru.soundofmusic.domain.usecases.SearchTopArtists
+import el.nuru.soundofmusic.domain.utils.Resource
 import el.nuru.soundofmusic.presentation.models.toArtistModel
-import el.nuru.soundofmusic.presentation.topartistslist.TopArtistUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +33,7 @@ class TopArtistsViewModel @Inject constructor(
         }
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = getTopArtists(refresh)) {
-                is NetworkResult.Error -> {
+                is Resource.Error -> {
                     mutableUiState.update {
                         it.copy(
                             isLoading = false,
@@ -42,7 +41,7 @@ class TopArtistsViewModel @Inject constructor(
                         )
                     }
                 }
-                is NetworkResult.Success -> {
+                is Resource.Success -> {
                     val topArtists = result.data.map {
                         it.toArtistModel()
                     }
@@ -67,7 +66,7 @@ class TopArtistsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = searchTopArtists(query)) {
-                is NetworkResult.Error -> {
+                is Resource.Error -> {
                     mutableUiState.update {
                         it.copy(
                             isLoading = false,
@@ -75,7 +74,7 @@ class TopArtistsViewModel @Inject constructor(
                         )
                     }
                 }
-                is NetworkResult.Success -> {
+                is Resource.Success -> {
                     val topArtists = result.data.map {
                         it.toArtistModel()
                     }

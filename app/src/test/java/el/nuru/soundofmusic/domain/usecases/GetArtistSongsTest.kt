@@ -3,8 +3,8 @@ package el.nuru.soundofmusic.domain.usecases
 import el.nuru.soundofmusic.data.Repository
 import el.nuru.soundofmusic.data.datasources.NetworkResult
 import el.nuru.soundofmusic.data.datasources.local.entities.SongData
-import el.nuru.soundofmusic.domain.entities.toSongEntity
-import el.nuru.soundofmusic.domain.usecases.GetArtistSongs
+import el.nuru.soundofmusic.domain.utils.Resource
+import el.nuru.soundofmusic.domain.utils.toSongEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -30,7 +30,7 @@ class GetArtistSongsTest {
         val refresh = false
 
         val data = listOf(SongData())
-        val expectedResult = NetworkResult.Success(data.map { it.toSongEntity() })
+        val expectedResult = Resource.Success(data.map { it.toSongEntity() })
 
         `when`(repository.getArtistSongs(permalink, artistId, refresh))
             .thenReturn(NetworkResult.Success(data))
@@ -46,9 +46,9 @@ class GetArtistSongsTest {
         val artistId = "artistId"
         val refresh = false
         val exception = Exception("Error")
-        val expectedResult = NetworkResult.Error(exception)
+        val expectedResult = Resource.Error(exception)
 
-        `when`(repository.getArtistSongs(permalink, artistId, refresh)).thenReturn(expectedResult)
+        `when`(repository.getArtistSongs(permalink, artistId, refresh)).thenReturn(NetworkResult.Error(exception))
 
         val result = getArtistSongs(permalink, artistId, refresh)
 

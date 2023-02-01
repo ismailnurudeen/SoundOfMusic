@@ -1,7 +1,9 @@
-package el.nuru.soundofmusic.domain.entities
+package el.nuru.soundofmusic.domain.utils
 
 import el.nuru.soundofmusic.data.datasources.local.entities.ArtistData
 import el.nuru.soundofmusic.data.datasources.local.entities.SongData
+import el.nuru.soundofmusic.domain.entities.ArtistEntity
+import el.nuru.soundofmusic.domain.entities.SongEntity
 
 internal fun ArtistData.toArtistEntity() = ArtistEntity(
     avatar_url = avatar_url,
