@@ -2,6 +2,7 @@ package el.nuru.soundofmusic.presentation.topartistslist
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -25,7 +26,6 @@ class TopArtistsActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         val topArtistAdapter = TopArtistsAdapter { artist ->
-
         }
         binding.recyclerViewArtists.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewArtists.adapter = topArtistAdapter
@@ -40,6 +40,19 @@ class TopArtistsActivity : AppCompatActivity() {
                 topArtistAdapter.submitList(it.artists)
             }
         }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                topArtistsViewModel.search(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                topArtistsViewModel.search(newText)
+                return false
+            }
+        })
+
         binding.swiperefresh.setOnRefreshListener {
             topArtistsViewModel.loadTopArtists(true)
         }

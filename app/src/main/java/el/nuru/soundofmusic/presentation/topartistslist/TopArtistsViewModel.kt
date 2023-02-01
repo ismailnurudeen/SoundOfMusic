@@ -8,6 +8,7 @@ import el.nuru.soundofmusic.data.datasources.NetworkResult
 import el.nuru.soundofmusic.domain.usecases.GetTopArtists
 import el.nuru.soundofmusic.domain.usecases.SearchTopArtists
 import el.nuru.soundofmusic.presentation.models.toArtistModel
+import el.nuru.soundofmusic.presentation.topartistslist.TopArtistUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -55,6 +56,34 @@ class TopArtistsViewModel @Inject constructor(
     fun clearErrorMessage() {
         mutableUiState.update {
             it.copy(errorMessage = "")
+        }
+    }
+
+    fun search(query: String?) {
+        if(query.isNullOrEmpty()) {
+            loadTopArtists()
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = searchTopArtists(query)) {
+                is NetworkResult.Error -> {
+                    mutableUiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = result.exception.localizedMessage
+                        )
+                    }
+                }
+                is NetworkResult.Success -> {
+                    val topArtists = result.data.map {
+                        it.toArtistModel()
+                    }
+                    mutableUiState.update {
+                        it.copy(artists = topArtists, isLoading = false)
+                    }
+                }
+            }
         }
     }
 }
