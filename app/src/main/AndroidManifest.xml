@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.songslist.SongsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_songs"
+            android:theme="@style/Theme.SoundOfMusic" />
     </application>
 
 </manifest>

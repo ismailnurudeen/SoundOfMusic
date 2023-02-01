@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SoundOfMusic</string>
+    <string name="title_activity_songs">Songs</string>
 </resources>

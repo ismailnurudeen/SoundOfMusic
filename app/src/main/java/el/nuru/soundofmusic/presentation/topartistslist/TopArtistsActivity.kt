@@ -1,5 +1,6 @@
 package el.nuru.soundofmusic.presentation.topartistslist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.SearchView
@@ -12,6 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import el.nuru.soundofmusic.databinding.ActivityMainBinding
+import el.nuru.soundofmusic.presentation.songslist.SongsActivity
+import el.nuru.soundofmusic.presentation.songslist.SongsActivity.Companion.EXTRA_ARTIST_ID
+import el.nuru.soundofmusic.presentation.songslist.SongsActivity.Companion.EXTRA_ARTIST_NAME
+import el.nuru.soundofmusic.presentation.songslist.SongsActivity.Companion.EXTRA_ARTIST_PERMALINK
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -26,6 +31,15 @@ class TopArtistsActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         val topArtistAdapter = TopArtistsAdapter { artist ->
+            artist?.let {
+                val songsActivityIntent = Intent(this, SongsActivity::class.java)
+                songsActivityIntent.apply {
+                    putExtra(EXTRA_ARTIST_NAME, it.username)
+                    putExtra(EXTRA_ARTIST_PERMALINK, it.permalink)
+                    putExtra(EXTRA_ARTIST_ID, it.id)
+                }
+                startActivity(songsActivityIntent)
+            }
         }
         binding.recyclerViewArtists.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewArtists.adapter = topArtistAdapter
