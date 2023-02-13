@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import el.nuru.soundofmusic.data.datasources.Datasource
+import el.nuru.soundofmusic.data.datasources.local.LocalDatasource
 import el.nuru.soundofmusic.data.datasources.remote.RemoteDatasource
 import javax.inject.Singleton
 
@@ -17,5 +18,5 @@ abstract class BindModule {
 
     @Binds
     @Singleton
-    abstract fun bindLocalDatasource(remoteDatasource: RemoteDatasource): Datasource
+    abstract fun bindLocalDatasource(localDatasource: LocalDatasource): Datasource
 }
