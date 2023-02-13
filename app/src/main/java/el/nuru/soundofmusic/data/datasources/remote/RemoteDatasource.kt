@@ -25,17 +25,6 @@ class RemoteDatasource @Inject constructor(private val apiClient: HearThisApiSer
             it.user
         }
     }
-    override suspend fun insertSongs(songs: List<SongData>) {
-        // no-impl
-    }
-
-    override suspend fun insertArtist(artists: List<ArtistData>) {
-        // no-impl
-    }
-
-    override suspend fun searchTopArtists(query: String): List<ArtistData> {
-        return emptyList()
-    }
 }
 
 class IOException(val errorMessage: String?) : Exception(errorMessage)

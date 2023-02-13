@@ -13,6 +13,8 @@ import el.nuru.soundofmusic.data.datasources.local.LocalDatasource
 import el.nuru.soundofmusic.data.datasources.local.SoundOfMusicDB
 import el.nuru.soundofmusic.data.datasources.remote.HearThisApiService
 import el.nuru.soundofmusic.data.datasources.remote.RemoteDatasource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -44,4 +46,7 @@ object ProvideModule {
     fun provideRepository(remoteDatasource: RemoteDatasource, localDatasource: LocalDatasource): Repository {
         return ArtistSongRepository(remoteDatasource, localDatasource)
     }
+    @Provides
+    @Singleton
+    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

@@ -18,5 +18,5 @@ abstract class BindModule {
 
     @Binds
     @Singleton
-    abstract fun bindLocalDatasource(localDatasource: LocalDatasource): Datasource
+    abstract fun bindLocalDatasource(remoteDatasource: LocalDatasource): Datasource
 }

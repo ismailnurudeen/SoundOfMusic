@@ -5,6 +5,7 @@ import el.nuru.soundofmusic.data.datasources.local.LocalDatasource
 import el.nuru.soundofmusic.data.datasources.local.entities.ArtistData
 import el.nuru.soundofmusic.data.datasources.local.entities.SongData
 import el.nuru.soundofmusic.data.datasources.remote.RemoteDatasource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ArtistSongRepository @Inject constructor(
@@ -37,11 +38,7 @@ class ArtistSongRepository @Inject constructor(
         }
     }
 
-    override suspend fun searchTopArtists(query: String): NetworkResult<List<ArtistData>> {
-        return try {
-            NetworkResult.Success(localDatasource.searchTopArtists(query))
-        } catch (e: Exception) {
-            NetworkResult.Error(e)
-        }
+    override suspend fun searchTopArtists(query: String): Flow<List<ArtistData>> {
+        return localDatasource.searchTopArtists(query)
     }
 }

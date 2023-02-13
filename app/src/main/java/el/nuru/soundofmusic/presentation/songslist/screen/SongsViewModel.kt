@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import el.nuru.soundofmusic.di.IoDispatcher
 import el.nuru.soundofmusic.domain.usecases.GetArtistSongs
 import el.nuru.soundofmusic.domain.utils.Resource
 import el.nuru.soundofmusic.presentation.models.Song
@@ -11,6 +12,7 @@ import el.nuru.soundofmusic.presentation.models.toSongModel
 import el.nuru.soundofmusic.presentation.songslist.SongsActivity.Companion.EXTRA_ARTIST_ID
 import el.nuru.soundofmusic.presentation.songslist.SongsActivity.Companion.EXTRA_ARTIST_NAME
 import el.nuru.soundofmusic.presentation.songslist.SongsActivity.Companion.EXTRA_ARTIST_PERMALINK
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SongsViewModel @Inject constructor(
     private val getArtistSongs: GetArtistSongs,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val mutableUiState = MutableStateFlow(SongListUiState())
     val uiState: StateFlow<SongListUiState> = mutableUiState
@@ -32,7 +35,7 @@ class SongsViewModel @Inject constructor(
                 it.copy(isRefreshing = true)
             }
         }
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             val artistName = savedStateHandle.get<String>(EXTRA_ARTIST_NAME) ?: return@launch
             val artistPermalink = savedStateHandle.get<String>(EXTRA_ARTIST_PERMALINK) ?: return@launch
             val artistId = savedStateHandle.get<String>(EXTRA_ARTIST_ID) ?: return@launch

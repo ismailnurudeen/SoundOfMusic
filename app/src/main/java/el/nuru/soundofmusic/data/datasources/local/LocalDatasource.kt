@@ -1,13 +1,15 @@
 package el.nuru.soundofmusic.data.datasources.local
 
 import el.nuru.soundofmusic.data.datasources.Datasource
+import el.nuru.soundofmusic.data.datasources.LocalDatasourceSpec
 import el.nuru.soundofmusic.data.datasources.local.entities.ArtistData
 import el.nuru.soundofmusic.data.datasources.local.entities.SongData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class LocalDatasource @Inject constructor(private val soundOfMusicDb: SoundOfMusicDB) : Datasource {
+class LocalDatasource @Inject constructor(private val soundOfMusicDb: SoundOfMusicDB) : Datasource, LocalDatasourceSpec {
     override suspend fun getArtistSongs(artistId: String): List<SongData> {
         return soundOfMusicDb.songDao().getArtistSongs(artistId)
     }
@@ -24,7 +26,7 @@ class LocalDatasource @Inject constructor(private val soundOfMusicDb: SoundOfMus
         soundOfMusicDb.artistDao().getArtists()
     }
 
-    override suspend fun searchTopArtists(query: String) = withContext(Dispatchers.IO) {
-        soundOfMusicDb.artistDao().searchTopArtists(query)
+    override suspend fun searchTopArtists(query: String): Flow<List<ArtistData>>{
+       return soundOfMusicDb.artistDao().searchTopArtists(query)
     }
 }

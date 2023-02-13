@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import el.nuru.soundofmusic.data.datasources.local.entities.ArtistData
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ArtistDao {
@@ -18,5 +19,5 @@ interface ArtistDao {
     fun getArtist(id: String): ArtistData
 
     @Query("SELECT * from artists where username like '%' || :query || '%'")
-    fun searchTopArtists(query: String): List<ArtistData>
+    fun searchTopArtists(query: String): Flow<List<ArtistData>>
 }
